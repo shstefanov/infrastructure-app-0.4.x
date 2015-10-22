@@ -7,9 +7,10 @@
     "email": "s.h.stefanov@mail.bg"
   },
   "dependencies": {
-    "infrastructure": "https://github.com/shstefanov/infrastructure.git#dev"
+    "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
+    "infrastructure-server-engine-express": "git+https://github.com/shstefanov/infrastructure-server-engine-express.git",
+    "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git"
   },
-  
   "scripts": {
     "reinstall": "rm -rf node_modules && npm cache clean && npm install"
   }
