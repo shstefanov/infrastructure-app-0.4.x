@@ -245,4 +245,39 @@
   When running the application, we will see additional log:
     [sys]  [2015-10-22 12:04:49][controller]....................... HelloController
 
+8. Calling the controller from page
+===================================
+
+  Edit "pages/hello.js"
+
+     module.exports = function(){
+      var env = this;
+      return env.lib.Page.extend("HelloPage", {
+        root:          "/hello",  // URI prefix
+        template:      "hello",   // Template to be rendered
+        
+        "GET /long/:name" :      function(req, res, next){
+          var self = this;
+          env.i.do("controllers.HelloController.helloMessage", req.params.name, function(err, message){
+            res.data = { message: message };        
+            self.render(req, res);        
+          });
+        }
+
+      });
+    };
+
+  Change "templates/helo.jade" to show the entire message
+
+    html
+      head
+        title #{message}
+      body
+        h1 #{message}
+
+
+  Visit http://localhost:3000/hello/long/Jonny and http://localhost:3000/hello/short/Jonny to see the result
+
+
+
 

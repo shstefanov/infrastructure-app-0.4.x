@@ -4,7 +4,7 @@ module.exports = function(){
     
     private: {
       getMessage: function(name){
-        return "Hello" + name + "!";
+        return "Hello, " + name + "!";
       }
     },
 
