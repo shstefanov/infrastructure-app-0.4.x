@@ -230,6 +230,7 @@
       return env.lib.Controller.extend("HelloController", {
         
         private: {
+          // Methods here can not be targeted from other workers
           getMessage: function(name){
             return "Hello" + name + "!";
           }
