@@ -1,12 +1,9 @@
-// app.js
-
 var infrastructure = require("infrastructure");
 
 infrastructure({
-  // This is the config
-  mode:              "development", // defaults to "development"
-  process_mode:      "cluster",     // defaults to "single"
-  rootDir:           __dirname,     // project root directory
+  mode:              "development",
+  process_mode:      "cluster",
+  rootDir:           __dirname,
 
   structures: {
     log: { engines: ["log"], options: { sys: true, info: true } },
@@ -20,14 +17,33 @@ infrastructure({
         http: { port: 3000 }
       }
     },
+    controllers: { path: "controllers", loaders: [ "controllers" ], libs: { "Controller" : "Controller" } },
 
-    controllers: {
-      path:        "controllers",     // The folder where controllers are
-      loaders:     [ "controllers" ], // built-in controllers loader
-      libs: {
-        "Controller" : "Controller"   // We need to inherit this class when creating our controllers
+    data: {
+      path:    "data",    // Folder where datalayers are
+      engines: [ "infrastructure-server-engine-mongodb"           ], // The engine
+      loaders: [ "data" ], // Built-in data loader
+
+      libs:{
+        MongoLayer:    "infrastructure-server-datalayer-mongodb"  // The base class, we will inherit it
+      },
+
+      config: {
+
+        // Mongodb engine needs the following configuration to connect
+        "mongodb": {
+          host:            "localhost",
+          port:            27017,
+          db:              "app_dev",
+          auto_reconnect:  true,
+          options:         { nativeParser: true }  // More options at http://mongodb.github.io/node-mongodb-native/api-generated/mongoclient.html
+        }
+
       }
+
     }
+
+
 
   }
 }, function(err, env){ if(err) throw err; });

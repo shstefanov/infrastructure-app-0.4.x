@@ -29,8 +29,7 @@
       if(err) throw err;
     });
 
-  Running it
-    node app.js
+  Running it with "node app.js"
   should run and exit without any output - there is no workers to run
 
 
@@ -104,11 +103,10 @@
     var infrastructure = require("infrastructure");
 
     infrastructure({
-      // This is the config
-      mode:              "development", // defaults to "development"
-      process_mode:      "cluster",     // defaults to "single"
-      rootDir:           __dirname,     // project root directory
-
+      mode:              "development",
+      process_mode:      "cluster",
+      rootDir:           __dirname,
+      
       structures: {
         log: { engines: ["log"], options: { sys: true, info: true } },
         
@@ -183,10 +181,9 @@
     var infrastructure = require("infrastructure");
 
     infrastructure({
-      // This is the config
-      mode:              "development", // defaults to "development"
-      process_mode:      "cluster",     // defaults to "single"
-      rootDir:           __dirname,     // project root directory
+      mode:              "development",
+      process_mode:      "cluster",
+      rootDir:           __dirname,
 
       structures: {
         log: { engines: ["log"], options: { sys: true, info: true } },
@@ -214,11 +211,12 @@
 
   Other options: https://github.com/shstefanov/infrastructure-server-pages-express
 
-  Creating needed folders
+  Creating needed folder
     mkdir controllers
 
   Running this will add this line to log output:
     [sys]  [2015-10-22 11:58:58][worker]........................... controllers
+
 
 7. Creating the controller
 ==========================
@@ -245,6 +243,7 @@
 
   When running the application, we will see additional log:
     [sys]  [2015-10-22 12:04:49][controller]....................... HelloController
+
 
 8. Calling the controller from page
 ===================================
@@ -284,6 +283,70 @@
 
   Visit http://localhost:3000/hello/long/Jonny and http://localhost:3000/hello/short/Jonny to see the result
 
+9. Adding dataLayer worker
+==========================
+
+  DataLayers are separate packages. In this example. We will use mongodb engine and DataLayer:
+    npm install https://github.com/shstefanov/infrastructure-server-engine-mongodb.git
+  And mongodb DataLayer metapackage
+    npm install https://github.com/shstefanov/infrastructure-server-datalayer-mongodb.git
+
+  In app.js
+
+    var infrastructure = require("infrastructure");
+
+    infrastructure({
+      mode:              "development",
+      process_mode:      "cluster",
+      rootDir:           __dirname,
+
+      structures: {
+        log: { engines: ["log"], options: { sys: true, info: true } },
+        pages: {
+          path:       "pages",
+          engines:    [ "infrastructure-server-engine-express"          ],
+          loaders:    [ "infrastructure-server-pages-express/loader"    ],
+          libs: {     Page : "infrastructure-server-pages-express/Page" },
+          config: {
+            views:{ path: "templates", view_engine: "jade", cache: true },
+            http: { port: 3000 }
+          }
+        },
+        controllers: { path: "controllers", loaders: [ "controllers" ], libs: { "Controller" : "Controller" } },
+
+        data: {
+          path:    "data",    // Folder where datalayers are
+          engines: [ "infrastructure-server-engine-mongodb"           ], // The engine
+          loaders: [ "data" ], // Built-in data loader
+
+          libs:{
+            MongoLayer:    "infrastructure-server-datalayer-mongodb"  // The base class, we will inherit it
+          },
+
+          config: {
+
+            // Mongodb engine needs the following configuration to connect
+            "mongodb": {
+              host:            "localhost",
+              port:            27017,
+              db:              "app_dev",
+              auto_reconnect:  true,
+              options:         { nativeParser: true }  // More options at http://mongodb.github.io/node-mongodb-native/api-generated/mongoclient.html
+            }
+
+          }
+
+        }
 
 
 
+      }
+    }, function(err, env){ if(err) throw err; });
+
+
+
+  Creating needed folder
+    mkdir data
+
+  Running this will add this line to log output:
+    [sys]  [2015-10-22 12:58:23][mongodb].......................... Connected to MongoDB on localhost:27017/app_dev
