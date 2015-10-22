@@ -1,0 +1,16 @@
+{
+  "name": "insrastructure-app",
+  "version": "0.0.1",
+  "private": false,
+  "author": {
+    "name": "Stefan Stefanov",
+    "email": "s.h.stefanov@mail.bg"
+  },
+  "dependencies": {
+    "infrastructure": "https://github.com/shstefanov/infrastructure.git#dev"
+  },
+  
+  "scripts": {
+    "reinstall": "rm -rf node_modules && npm cache clean && npm install"
+  }
+}
