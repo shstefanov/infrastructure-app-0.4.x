@@ -172,3 +172,77 @@
     [sys]  [2015-10-22 11:14:30][route]............................ GET    /hello/:name
 
   Visiting http://localhost:3000/hello/Jonny will show the template as html.
+
+
+6. Adding controllers worker
+===========================
+
+  Adding controllers configuration to structures
+    // app.js
+
+    var infrastructure = require("infrastructure");
+
+    infrastructure({
+      // This is the config
+      mode:              "development", // defaults to "development"
+      process_mode:      "cluster",     // defaults to "single"
+      rootDir:           __dirname,     // project root directory
+
+      structures: {
+        log: { engines: ["log"], options: { sys: true, info: true } },
+        pages: {
+          path:       "pages",
+          engines:    [ "infrastructure-server-engine-express"          ],
+          loaders:    [ "infrastructure-server-pages-express/loader"    ],
+          libs: {     Page : "infrastructure-server-pages-express/Page" },
+          config: {
+            views:{ path: "templates", view_engine: "jade", cache: true },
+            http: { port: 3000 }
+          }
+        },
+
+        controllers: {
+          path:        "controllers",     // The folder where controllers are
+          loaders:     [ "controllers" ], // built-in controllers loader
+          libs: {
+            "Controller" : "Controller"   // We need to inherit this class when creating our controllers
+          }
+        }
+
+      }
+    }, function(err, env){ if(err) throw err; });
+
+  Other options: https://github.com/shstefanov/infrastructure-server-pages-express
+
+  Creating needed folders
+    mkdir controllers
+
+  Running this will add this line to log output:
+    [sys]  [2015-10-22 11:58:58][worker]........................... controllers
+
+7. Creating the controller
+==========================
+
+  In "controllers" folder, make "HelloController.js"
+
+    module.exports = function(){
+      var env = this;
+      return env.lib.Controller.extend("HelloController", {
+        
+        private: {
+          getMessage: function(name){
+            return "Hello" + name + "!";
+          }
+        },
+
+        helloMessage: function(name, cb){
+          cb(null, this.getMessage(name));
+        }
+
+      });
+    };
+
+  When running the application, we will see additional log:
+    [sys]  [2015-10-22 12:04:49][controller]....................... HelloController
+
+
