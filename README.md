@@ -141,3 +141,34 @@
     [sys]  [2015-10-22 10:59:51][http]............................. Express server listening on port 3000
 
 
+5. Creating page class and template
+=============================
+
+  In "pages" folder, create "hello.js" file
+
+    module.exports = function(){
+      var env = this;
+      return env.lib.Page.extend("HelloPage", {
+        root:          "/hello",  // URI prefix
+        template:      "hello",   // Template to be rendered
+        "GET /:name" : function(req, res, next){  // Handle some route
+          res.data = { name: req.params.name };        // Attach data to be rendered by template
+          this.render(req, res);                       // Call page renderer
+        }
+      });
+    };
+
+  In "templates" folder, create "hello.jade" file
+
+    html
+      head
+        title Hello #{name}
+      body
+        h1 Hello #{name}
+
+
+  Running it will add more reports to logs
+  
+    [sys]  [2015-10-22 11:14:30][route]............................ GET    /hello/:name
+
+  Visiting http://localhost:3000/hello/Jonny will show the template as html.
