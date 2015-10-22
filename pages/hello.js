@@ -14,7 +14,7 @@ module.exports = function(){
     },
 
     // The short variant
-    // target | params (comma separated | mountpoint on res.data)
+    // target | params (comma separated) | mountpoint on res.data
     "GET /short/:name": "controllers.HelloController.helloMessage | req.params.name | message"
 
   });
