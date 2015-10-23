@@ -350,3 +350,49 @@
 
   Running this will add this line to log output:
     [sys]  [2015-10-22 12:58:23][mongodb].......................... Connected to MongoDB on localhost:27017/app_dev
+
+
+10. Creating DataLayer object
+=============================
+
+  In "data" folder:
+
+    // data/Models.js
+
+    module.exports = function(){
+      var env     = this;
+      
+      return env.lib.MongoLayer.extend("Models", {
+        collectionName: "Models",
+      });
+
+    }
+
+  After running the app we should see in log:
+    [sys]  [2015-10-23 22:00:01][DataLayer:mongodb]................ Models
+
+  And we can try it's CRUD:
+
+    // app.js
+    var infrastructure = require("infrastructure");
+    // Config is moved to json file
+    infrastructure(require("./config.json"), function(err, env){ 
+      if(err) throw err; 
+      
+      if(require("cluster").isMaster){
+        
+        env.i.do("data.Models.create", {field_a: 5, field_b: 6}, function(err, model){ // err === null
+          
+          env.i.do("log.info", "Created model", model);
+          
+          env.i.do("data.Models.find", function(err, models){  // err === null
+            env.i.do("log.info", "Get all models", models);
+          });
+
+        });
+
+      }
+      
+    });
+
+  Running this will show us 2 info logs
