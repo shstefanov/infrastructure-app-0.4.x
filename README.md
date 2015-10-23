@@ -36,7 +36,7 @@
 3. Adding first worker
 ======================
 
-  It will be built-in logger worker. Workers are defined under "structure" object in config.
+  It will be built-in logger worker. Workers are defined under "structures" object in config.
 
     // app.js
 
@@ -50,8 +50,8 @@
 
       structures: {
         log: {
-          engines: ["log"],             // Mostly workers need to have one or more engines
-          options: {                    // options will only affect this built-in worler
+          engines: ["log"],             // Most of workers need to have one or more engines
+          options: {                    // options will only affect this built-in worker
             sys: true,                  // "sys" option will be used by system(worker engines, loaders and some instances to report it's initialization)
             info: true                  // Any other log option is custom and can be used by the application to log different things
           }
@@ -64,7 +64,7 @@
       if(require("cluster").isMaster){
         // First argument - the target we call
         // Second - specific for logger - log context
-        // Thurd  - info we want to log
+        // Third  - info we want to log
         env.i.do("log.info", "master process", "initialization successfull");
       }
 
@@ -92,9 +92,11 @@
   We need to install some other packages
   
   The engine:
+
     npm install https://github.com/shstefanov/infrastructure-server-engine-express.git
 
   The loader and classes metapackage:
+
     npm install https://github.com/shstefanov/infrastructure-server-pages-express.git
 
   Adding pages configuration to structures
@@ -132,10 +134,12 @@
   Other options: https://github.com/shstefanov/infrastructure-server-pages-express
 
   Creating needed folders
-    mkdir pages
-    mkdir templates
+
+    $> mkdir pages
+    $> mkdir templates
 
   Running this will add this line to log output:
+
     [sys]  [2015-10-22 10:59:51][http]............................. Express server listening on port 3000
 
 
@@ -242,6 +246,7 @@
     };
 
   When running the application, we will see additional log:
+
     [sys]  [2015-10-22 12:04:49][controller]....................... HelloController
 
 
@@ -288,8 +293,11 @@
 ==========================
 
   DataLayers are separate packages. In this example. We will use mongodb engine and DataLayer:
+
     npm install https://github.com/shstefanov/infrastructure-server-engine-mongodb.git
-  And mongodb DataLayer metapackage
+
+  And mongodb DataLayer metapackage:
+
     npm install https://github.com/shstefanov/infrastructure-server-datalayer-mongodb.git
 
   In app.js
@@ -347,9 +355,11 @@
 
 
   Creating needed folder
+
     mkdir data
 
   Running this will add this line to log output:
+
     [sys]  [2015-10-22 12:58:23][mongodb].......................... Connected to MongoDB on localhost:27017/app_dev
 
 
@@ -370,6 +380,7 @@
     }
 
   After running the app we should see in log:
+  
     [sys]  [2015-10-23 22:00:01][DataLayer:mongodb]................ Models
 
   And we can try it's CRUD:
