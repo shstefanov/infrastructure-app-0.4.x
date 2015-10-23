@@ -396,3 +396,99 @@
     });
 
   Running this will show us 2 info logs
+
+
+11. Tests
+=========
+
+  Add test runner and mocha devdependency in package.json
+
+    {
+      "name": "insrastructure-app",
+      "version": "0.0.1",
+      "private": false,
+      "author": {
+        "name": "Some Name",
+        "email": "some.mail@mail.com"
+      },
+      "dependencies": {
+        "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
+        "infrastructure-server-datalayer-mongodb": "git+https://github.com/shstefanov/infrastructure-server-datalayer-mongodb.git",
+        "infrastructure-server-engine-express": "git+https://github.com/shstefanov/infrastructure-server-engine-express.git",
+        "infrastructure-server-engine-mongodb": "git+https://github.com/shstefanov/infrastructure-server-engine-mongodb.git",
+        "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git",
+      },
+
+      "devDependencies": {
+        "mocha": "latest"
+      },
+
+      "scripts": {
+        "test": "node node_modules/mocha/bin/mocha --recursive --colors --sort --check-leaks --no-exit --full-trace --throw-deprecation test"
+      }
+    }
+
+  Then "npm install"
+
+  Create folder "test" and "run-stop.js" in it
+
+    // test/run-stop.js
+    var assert = require("assert");
+    var infrastructure = require("infrastructure/test_env.js");
+
+    describe("Start - stop application", function(){
+      
+      var env;
+
+      it("starts application", function(next){
+        this.timeout(4000);
+        infrastructure.start({ process_mode: "cluster" }, function(err, test_env){
+          assert.equal( err, null );
+          env = test_env;
+          next();
+        });
+      });
+
+      it("stops application", function(next){
+        this.timeout(4000);
+        env.stop(function(err){
+          assert.equal(err, null);
+          next();
+        });
+      });
+
+    });
+
+  Running "npm" will show us some extra logs in console. To fix this, we will add something that will patch the config object in test mode.
+  In "config.json" in main object's root add "test" and write some configurations in it:
+
+    {
+
+      "process_mode":      "cluster",
+
+      "structures": {...},
+
+      "test": {
+        "structures": {"log": {"options": {"sys": false }, "info": false } }
+      }
+      
+    }
+
+  Remove '"mode": "development",' from it, "development is default value"
+  And running it again should show something like this in the console:
+
+    $> npm test
+
+    > insrastructure-app@0.0.1 test /home/stefan/projects/infrastructure-app
+    > node node_modules/mocha/bin/mocha --recursive --colors --sort --check-leaks --no-exit --full-trace --throw-deprecation test
+
+
+
+      Start - stop application
+        ✓ starts application (1435ms)
+        ✓ stops application
+
+
+      2 passing (1s)
+
+    $>

@@ -11,9 +11,16 @@
     "infrastructure-server-datalayer-mongodb": "git+https://github.com/shstefanov/infrastructure-server-datalayer-mongodb.git",
     "infrastructure-server-engine-express": "git+https://github.com/shstefanov/infrastructure-server-engine-express.git",
     "infrastructure-server-engine-mongodb": "git+https://github.com/shstefanov/infrastructure-server-engine-mongodb.git",
-    "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git"
+    "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git",
+    "underscore": "latest"
   },
+
+  "devDependencies": {
+    "mocha": "latest"
+  },
+
   "scripts": {
-    "reinstall": "rm -rf node_modules && npm cache clean && npm install"
+    "reinstall": "rm -rf node_modules && npm cache clean && npm install",
+    "test": "node node_modules/mocha/bin/mocha --recursive --colors --sort --check-leaks --no-exit --full-trace --throw-deprecation test"
   }
 }

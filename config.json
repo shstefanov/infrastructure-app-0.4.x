@@ -1,5 +1,4 @@
 {
-  "mode":              "development",
   "process_mode":      "cluster",
 
   "structures": {
@@ -55,6 +54,10 @@
       }
     }
 
+  },
+
+  "test": {
+    "structures": {"log": {"options": {"sys": false }, "info": false } }
   }
   
 }
