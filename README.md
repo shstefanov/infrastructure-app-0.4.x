@@ -353,3 +353,143 @@
     [sys]  [2015-10-22 12:58:23][mongodb].......................... Connected to MongoDB on localhost:27017/app_dev
 
 
+10. Creating DataLayer object
+=============================
+
+  In "data" folder:
+
+    // data/Models.js
+
+    module.exports = function(){
+      var env     = this;
+      
+      return env.lib.MongoLayer.extend("Models", {
+        collectionName: "Models",
+      });
+
+    }
+
+  After running the app we should see in log:
+    [sys]  [2015-10-23 22:00:01][DataLayer:mongodb]................ Models
+
+  And we can try it's CRUD:
+
+    // app.js
+    var infrastructure = require("infrastructure");
+    // Config is moved to json file
+    infrastructure(require("./config.json"), function(err, env){ 
+      if(err) throw err; 
+      
+      if(require("cluster").isMaster){
+        
+        env.i.do("data.Models.create", {field_a: 5, field_b: 6}, function(err, model){ // err === null
+          
+          env.i.do("log.info", "Created model", model);
+          
+          env.i.do("data.Models.find", function(err, models){  // err === null
+            env.i.do("log.info", "Get all models", models);
+          });
+
+        });
+
+      }
+      
+    });
+
+  Running this will show us 2 info logs
+
+
+11. Tests
+=========
+
+  Add test runner and mocha devdependency in package.json
+
+    {
+      "name": "insrastructure-app",
+      "version": "0.0.1",
+      "private": false,
+      "author": {
+        "name": "Some Name",
+        "email": "some.mail@mail.com"
+      },
+      "dependencies": {
+        "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
+        "infrastructure-server-datalayer-mongodb": "git+https://github.com/shstefanov/infrastructure-server-datalayer-mongodb.git",
+        "infrastructure-server-engine-express": "git+https://github.com/shstefanov/infrastructure-server-engine-express.git",
+        "infrastructure-server-engine-mongodb": "git+https://github.com/shstefanov/infrastructure-server-engine-mongodb.git",
+        "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git",
+      },
+
+      "devDependencies": {
+        "mocha": "latest"
+      },
+
+      "scripts": {
+        "test": "node node_modules/mocha/bin/mocha --recursive --colors --sort --check-leaks --no-exit --full-trace --throw-deprecation test"
+      }
+    }
+
+  Then "npm install"
+
+  Create folder "test" and "run-stop.js" in it
+
+    // test/run-stop.js
+    var assert = require("assert");
+    var infrastructure = require("infrastructure/test_env.js");
+
+    describe("Start - stop application", function(){
+      
+      var env;
+
+      it("starts application", function(next){
+        this.timeout(4000);
+        infrastructure.start({ process_mode: "cluster" }, function(err, test_env){
+          assert.equal( err, null );
+          env = test_env;
+          next();
+        });
+      });
+
+      it("stops application", function(next){
+        this.timeout(4000);
+        env.stop(function(err){
+          assert.equal(err, null);
+          next();
+        });
+      });
+
+    });
+
+  Running "npm" will show us some extra logs in console. To fix this, we will add something that will patch the config object in test mode.
+  In "config.json" in main object's root add "test" and write some configurations in it:
+
+    {
+
+      "process_mode":      "cluster",
+
+      "structures": {...},
+
+      "test": {
+        "structures": {"log": {"options": {"sys": false }, "info": false } }
+      }
+      
+    }
+
+  Remove '"mode": "development",' from it, "development is default value"
+  And running it again should show something like this in the console:
+
+    $> npm test
+
+    > insrastructure-app@0.0.1 test /home/stefan/projects/infrastructure-app
+    > node node_modules/mocha/bin/mocha --recursive --colors --sort --check-leaks --no-exit --full-trace --throw-deprecation test
+
+
+
+      Start - stop application
+        ✓ starts application (1435ms)
+        ✓ stops application
+
+
+      2 passing (1s)
+
+    $>
