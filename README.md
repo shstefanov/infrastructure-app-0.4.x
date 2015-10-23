@@ -380,7 +380,7 @@
     }
 
   After running the app we should see in log:
-  
+
     [sys]  [2015-10-23 22:00:01][DataLayer:mongodb]................ Models
 
   And we can try it's CRUD:
@@ -471,7 +471,7 @@
 
     });
 
-  Running "npm" will show us some extra logs in console. To fix this, we will add something that will patch the config object in test mode.
+  Running "npm test" will show us some extra logs in console. To fix this, we will add something that will patch the config object in test mode.
   In "config.json" in main object's root add "test" and write some configurations in it:
 
     {
@@ -486,7 +486,7 @@
       
     }
 
-  Remove '"mode": "development",' from it, "development is default value"
+  Remove '"mode": "development",' from it.
   And running it again should show something like this in the console:
 
     $> npm test
