@@ -234,7 +234,7 @@
         private: {
           // Methods here can not be targeted from other workers
           getMessage: function(name){
-            return "Hello" + name + "!";
+            return "Hello, " + name + "!";
           }
         },
 
