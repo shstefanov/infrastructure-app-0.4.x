@@ -427,7 +427,7 @@
       },
       "dependencies": {
         "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
-        "infrastructure-mongodb": "git+https://github.com/shstefanov/infrastructure-mongodb.git",
+        "infrastructure-mongodb": "^0.2.0",
         "infrastructure-server-engine-express": "git+https://github.com/shstefanov/infrastructure-server-engine-express.git",
         "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git",
       },
