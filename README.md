@@ -292,13 +292,9 @@
 9. Adding dataLayer worker
 ==========================
 
-  DataLayers are separate packages. In this example. We will use mongodb engine and DataLayer:
+  Mongodb tools for infrastructure is separate metapackage. In this example. It contains mongodb engine and DataLayer:
 
-    npm install https://github.com/shstefanov/infrastructure-server-engine-mongodb.git
-
-  And mongodb DataLayer metapackage:
-
-    npm install https://github.com/shstefanov/infrastructure-server-datalayer-mongodb.git
+    npm install infrastructure-mongodb
 
   In app.js
 
@@ -325,11 +321,11 @@
 
         data: {
           path:    "data",    // Folder where datalayers are
-          engines: [ "infrastructure-server-engine-mongodb"           ], // The engine
+          engines: [ "infrastructure-mongodb/engine"           ], // The engine
           loaders: [ "data" ], // Built-in data loader
 
           libs:{
-            MongoLayer:    "infrastructure-server-datalayer-mongodb"  // The base class, we will inherit it
+            MongoLayer:    "infrastructure-mongodb/MongoLayer"  // The base class, we will inherit it
           },
 
           config: {
@@ -379,6 +375,8 @@
 
     }
 
+  The only requirement for now is to attach "collectionName" to the class.
+
   After running the app we should see in log:
 
     [sys]  [2015-10-23 22:00:01][DataLayer:mongodb]................ Models
@@ -393,10 +391,12 @@
       
       if(require("cluster").isMaster){
         
+        // Call "crete" method of our layer
         env.i.do("data.Models.create", {field_a: 5, field_b: 6}, function(err, model){ // err === null
           
           env.i.do("log.info", "Created model", model);
           
+          // Call "find" method of our layer
           env.i.do("data.Models.find", function(err, models){  // err === null
             env.i.do("log.info", "Get all models", models);
           });
@@ -406,6 +406,8 @@
       }
       
     });
+
+  There are "create", "find", "findOne", "count", "update", and "delete" methods. Custom methods are also callable.
 
   Running this will show us 2 info logs
 
@@ -425,9 +427,8 @@
       },
       "dependencies": {
         "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
-        "infrastructure-server-datalayer-mongodb": "git+https://github.com/shstefanov/infrastructure-server-datalayer-mongodb.git",
+        "infrastructure-mongodb": "git+https://github.com/shstefanov/infrastructure-mongodb.git",
         "infrastructure-server-engine-express": "git+https://github.com/shstefanov/infrastructure-server-engine-express.git",
-        "infrastructure-server-engine-mongodb": "git+https://github.com/shstefanov/infrastructure-server-engine-mongodb.git",
         "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git",
       },
 
