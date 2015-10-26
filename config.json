@@ -38,10 +38,10 @@
 
     "data": {
       "path":    "data",
-      "engines": [ "infrastructure-server-engine-mongodb"           ],
+      "engines": [ "infrastructure-mongodb/engine" ],
       "loaders": [ "data" ],
       "libs":{
-        "MongoLayer":    "infrastructure-server-datalayer-mongodb"
+        "MongoLayer":    "infrastructure-mongodb/MongoLayer"
       },
       "config": {
         "mongodb": {
@@ -51,6 +51,7 @@
           "auto_reconnect":  true,
           "options":         { "nativeParser": true }
         }
+
       }
     }
 
