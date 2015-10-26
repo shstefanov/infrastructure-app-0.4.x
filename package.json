@@ -8,9 +8,8 @@
   },
   "dependencies": {
     "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
-    "infrastructure-server-datalayer-mongodb": "git+https://github.com/shstefanov/infrastructure-server-datalayer-mongodb.git",
     "infrastructure-server-engine-express": "git+https://github.com/shstefanov/infrastructure-server-engine-express.git",
-    "infrastructure-server-engine-mongodb": "git+https://github.com/shstefanov/infrastructure-server-engine-mongodb.git",
+    "infrastructure-mongodb": "^0.2.0",
     "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git",
     "underscore": "latest"
   },
