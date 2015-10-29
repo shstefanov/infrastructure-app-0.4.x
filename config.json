@@ -7,7 +7,8 @@
       "engines": ["log"], 
       "options": { 
         "sys": true, 
-        "info": true 
+        "info": true,
+        "build": true
       } 
     },
 
@@ -22,8 +23,13 @@
           "view_engine": "jade", 
           "cache": true 
         },
+
+
         "http": { 
-          "port": 3000 
+          "port": 3000, 
+          "static": {
+            "/public": "public"
+          }
         }
       }
     },
@@ -38,10 +44,11 @@
 
     "data": {
       "path":    "data",
-      "engines": [ "infrastructure-mongodb/engine" ],
+      "engines": [ "infrastructure-mongodb/engine", "infrastructure-mysql/engine" ],
       "loaders": [ "data" ],
       "libs":{
-        "MongoLayer":    "infrastructure-mongodb/MongoLayer"
+        "MongoLayer":    "infrastructure-mongodb/MongoLayer",
+        "MysqlLayer":    "infrastructure-mysql/MysqlLayer"
       },
       "config": {
         "mongodb": {
@@ -50,8 +57,30 @@
           "db":              "app_testdev",
           "auto_reconnect":  true,
           "options":         { "nativeParser": true }
+        },
+        "mysql": {
+          "host"     : "localhost",
+          "user"     : "infrastructure",
+          "password" : "pass-12345",
+          "database" : "app_dev"
         }
 
+      }
+    },
+
+    "webpack": {
+      "path": ["client", "*/*.webpack.js"],
+      "engines": ["infrastructure-webpack/engine"],
+      "loaders": ["infrastructure-webpack/loader"],
+      "libs": {
+        "Bundler": "infrastructure-webpack/Bundler"
+      },
+
+      "config": {
+        "webpack": {
+          "watch":  true,
+          "buildDestination": "./public/dist"
+        }
       }
     }
 
@@ -59,6 +88,10 @@
 
   "test": {
     "structures": {"log": {"options": {"sys": false }, "info": false } }
+  },
+
+  "development": {
+    "structures": {"log": {"options": {"sys": false, "build": false }, "info": true } }
   }
   
 }

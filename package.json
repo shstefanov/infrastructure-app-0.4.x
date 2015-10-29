@@ -10,6 +10,7 @@
     "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
     "infrastructure-server-engine-express": "git+https://github.com/shstefanov/infrastructure-server-engine-express.git",
     "infrastructure-mongodb": "^0.2.0",
+    "infrastructure-mysql": "git+https://github.com/shstefanov/infrastructure-mysql.git",
     "infrastructure-server-pages-express": "git+https://github.com/shstefanov/infrastructure-server-pages-express.git",
     "underscore": "latest"
   },

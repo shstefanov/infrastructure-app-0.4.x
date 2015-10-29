@@ -1,5 +1,9 @@
-html
-  head
-    title #{message}
-  body
-    h1 #{message}
+extends layout.jade
+
+block head
+  title #{message}
+  base(href="#{page.root}")
+
+block content
+  h1 #{message}
+

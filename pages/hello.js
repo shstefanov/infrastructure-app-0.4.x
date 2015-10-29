@@ -3,6 +3,11 @@ module.exports = function(){
   return env.lib.Page.extend("HelloPage", {
     root:          "/hello",
     template:      "hello",
+
+    pre: ["webpack.panel.getAssets", function(req, res, next){
+      console.log(res.data);
+      next();
+    }],
     
     "GET /long/:name" :      function(req, res, next){
       var self = this;
